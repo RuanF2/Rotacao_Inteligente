@@ -102,9 +102,43 @@ def test_crud_propriedades():
 
 
 def test_mapa_pontos():
-    pts = client.get("/api/mapa/pontos").json()["pontos"]
-    assert len(pts) >= 6
-    assert all("vulnerabilidade" in p for p in pts if "erro" not in p)
+    from app import fontes
+
+    resposta = client.get("/api/mapa/pontos")
+
+    assert resposta.status_code == 200
+
+    pts = resposta.json()["pontos"]
+
+    # O mapa só calcula pontos com cache climático disponível.
+    locais_com_cache = [
+        loc
+        for loc in fontes.locais_demo()
+        if loc["tem_cache"]
+    ]
+
+    # A quantidade depende dos caches existentes no computador.
+    assert len(pts) == len(locais_com_cache)
+
+    # Verifica se os pontos correspondem às localidades com cache.
+    esperados = {
+        (loc["nome"], loc["lat"], loc["lon"])
+        for loc in locais_com_cache
+    }
+
+    encontrados = {
+        (p["nome"], p["lat"], p["lon"])
+        for p in pts
+    }
+
+    assert encontrados == esperados
+
+    # Pontos calculados devem apresentar vulnerabilidade.
+    assert all(
+        "vulnerabilidade" in p
+        for p in pts
+        if "erro" not in p
+    )
 
 
 def test_relatorio_distingue_perda_hidrica_de_risco_termico():
