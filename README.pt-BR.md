@@ -1,182 +1,252 @@
 # Rotação Inteligente 2.0 — Global Agricultural Intelligence
 
-Ferramenta de apoio à decisão para **rotação de culturas adaptada ao clima**, construída sobre observações da Terra da NASA.
-Projeto para o NASA Space Apps Challenge 2026 — desafio *Field Shift: adaptando fazendas com dados da NASA*.
+**Apoio à decisão para rotação de culturas adaptada ao clima, com dados de observação da Terra da NASA.**
 
-> Ferramenta de apoio. Não substitui o julgamento do agricultor nem a orientação de especialistas locais.
+Projeto desenvolvido para o **NASA Space Apps Challenge 2026**, no desafio *Field Shift: Adapting Farms with NASA Data*.
 
-## Problema
+> **Ferramenta de apoio à decisão, não uma prescrição agronômica.** Os resultados representam cenários gerados por modelos e não substituem medições em campo ou a orientação de profissionais locais qualificados.
 
-Agricultores precisam escolher o que plantar, e quando, diante de chuva cada vez mais irregular, mais dias de calor
-extremo, solo degradado e pouca água. As decisões de rotação raramente usam a série climática do próprio local, e os
-benefícios de leguminosas e plantas de cobertura são difíceis de comparar com o risco de quebra de safra.
+**Idioma:** [English](README.md) | Português (Brasil)
 
-## Solução
+## O problema
 
-Para qualquer coordenada do planeta, o sistema:
+A variabilidade das chuvas, o calor extremo, a escassez de água e a degradação do solo dificultam o planejamento agrícola. Para escolher uma sequência de culturas, é necessário considerar tanto o histórico climático local quanto as características e restrições de cada cultivo.
 
-1. **Analisa o ambiente** com aproximadamente 35 anos completos de dados diários do NASA POWER (chuva, temperaturas, umidade do solo modelada),
-   calcula ET0, aridez, veranicos, calor extremo, erosividade, tendências e a relação com El Niño / La Niña.
-2. **Mede a vulnerabilidade** da propriedade com um índice experimental documentado (8 indicadores, faixas publicadas).
-3. **Gera estratégias de rotação** com otimização multiobjetivo **NSGA-II** (pymoo) sobre 13 culturas, respeitando
-   restrições agronômicas (sobreposição, janela de semeadura, janela térmica, monocultura, renda anual).
-4. **Compara** a rotação atual (A) com Conservação do solo (B), Resiliência hídrica (C) e Equilíbrio pelas prioridades (D),
-   avaliando cada uma em ~34 pares de anos históricos reais — não só na média.
-5. **Simula** o comportamento das estratégias sob perturbações hipotéticas de temperatura e chuva.
-6. **Explica** cada recomendação: por quê, evidências (com fonte e período), benefícios potenciais, riscos,
-   completude das evidências e o que está faltando.
-7. **Gera relatório** imprimível (PDF pelo navegador) e em Markdown.
+## A solução
 
-O diferencial é a **faixa de rotação de 24 meses**: uma régua de calendário em que cada mês mostra a família botânica e a
-cobertura efetiva do solo, ponderada pela água realmente disponível naquele local.
+O Rotação Inteligente 2.0 é uma aplicação web interativa para apoiar o planejamento da rotação de culturas em coordenadas geográficas selecionadas pelo usuário. A ferramenta combina análise ambiental histórica, otimização multiobjetivo, simulações de sensibilidade climática e explicações comparativas.
 
-## Estado atual de implementação — esclarecimentos
+A aplicação permite:
 
-| Funcionalidade | Situação real |
+1. **Analisar o clima local:** consultar séries diárias do NASA POWER e calcular precipitação, temperatura, umidade do solo modelada, evapotranspiração de referência (ET₀), aridez, veranicos, calor extremo, erosividade e tendências históricas. Informações ENSO/ONI da NOAA complementam a análise.
+2. **Avaliar a vulnerabilidade ambiental:** calcular um índice experimental com oito indicadores e faixas de classificação documentadas.
+3. **Explorar rotações agrícolas:** avaliar um catálogo de **13 culturas** e otimizar sequências de **24 meses** com o algoritmo multiobjetivo **NSGA-II** (`pymoo`), considerando restrições agronômicas.
+4. **Comparar quatro estratégias:** **A — Rotação atual**, **B — Conservação do solo**, **C — Resiliência hídrica** e **D — Equilíbrio pelas prioridades do usuário**.
+5. **Considerar a variabilidade histórica:** comparar resultados modelados em aproximadamente 34 janelas históricas sobrepostas de dois anos, conforme a disponibilidade dos dados.
+6. **Simular sensibilidade climática:** explorar mudanças hipotéticas na temperatura, precipitação e irrigação, sem tratá-las como previsões meteorológicas ou projeções oficiais.
+7. **Explicar os resultados:** apresentar compromissos entre objetivos, hipóteses, períodos de referência, incertezas, completude das evidências e possíveis razões para uma otimização não identificar uma sequência adequada.
+8. **Gerar relatórios:** produzir relatórios em Markdown e visualizações preparadas para impressão, que podem ser salvas como PDF pelo navegador.
+
+Um dos destaques é a **linha do tempo de rotação de 24 meses**, que permite visualizar a sequência de culturas, as famílias botânicas e a duração modelada da cobertura do solo, em conjunto com o contexto climático local.
+
+## Telas da aplicação
+
+| Tela | Principais funcionalidades |
 |---|---|
-| NASA POWER, ENSO, vulnerabilidade, catálogo de 13 culturas, otimização NSGA-II, estratégias A–D, simulador e relatório | Implementados na aplicação web 2.0 |
-| Módulos antigos `planejador.py`, `janelas.py`, `alerta.py` e `semaforo.py` | Disponíveis na aplicação Streamlit NASA1; **não integrados à API FastAPI 2.0** |
-| Aviso automático de **“PLANTE AGORA”** e envio por WhatsApp, SMS, e-mail ou push | **Não implementados no 2.0**. O alerta Streamlit é um experimento e mantém limiares de chuva/umidade não calibrados (`None`). |
-| Quantidade de sementes em kg e produção prevista em kg/ha, toneladas ou sacas | **Não estimadas de modo validado**. O catálogo de 13 culturas não contém taxas de semeadura/rendimentos observados e o banco regional de produtividade não está preenchido. |
-| Perda potencial relativa de rendimento hídrico | **Estimativa de modelo** via Ky e déficit hídrico, não estimativa de produção absoluta ou resultado observado |
-| Indicador de confiança | Qualidade/completude das evidências, **não** probabilidade de sucesso agrícola |
+| **Painel** | Condições ambientais, índice experimental de vulnerabilidade, avisos analíticos de risco, visão geral das estratégias e mapa |
+| **Propriedade** | Escolha de coordenadas ou ponto no mapa; informações de solo, declividade, irrigação, rotação atual, culturas permitidas e prioridades; salvamento local em SQLite |
+| **Análise ambiental** | Séries NASA POWER, contexto ENSO, comparação de períodos históricos, indicadores de vulnerabilidade e camadas visuais NASA GIBS |
+| **Rotação inteligente** | Estratégias A–D, sequências de 24 meses, indicadores comparativos, fronteira de Pareto e explicações |
+| **Simulador climático** | Alterações hipotéticas de temperatura, chuva e irrigação, seleção de período-base e comparação de sensibilidade |
+| **Relatório** | Resultados, evidências, fontes, riscos, limitações e formato próprio para impressão |
 
-**Integração NASA1:** o arquivo `backend/app/legacy.py` importa seletivamente apenas `core.nasa_power`, `core.enso` e constantes de `config.py`. O planejador e as regras de alerta do NASA1 não são executados pelos endpoints de rotação da versão 2.0.
+Quando o otimizador não encontra uma rotação válida, a interface apresenta informações de diagnóstico sobre as restrições verificadas. **Não encontrar uma solução em uma execução não comprova matematicamente que nenhuma solução possível exista.**
 
-**Período da série:** o cliente NASA POWER pode consultar 1991–2026 para fechar anos agrícolas. Comparativos que usam 1991–2025 analisam 35 anos civis completos. Uma análise de rotação pode empregar cerca de 34 pares deslizantes de dois anos — 68 observações de cultivo/ano **não independentes**.
+## Fontes de dados e integrações
 
-**Transparência:** alertas mostrados no painel são avisos analíticos de risco, não ordens de plantio nem notificações externas. Cenários de temperatura/chuva são hipóteses de sensibilidade, não previsões climáticas oficiais.
-
-## Funcionalidades (todas implementadas e testadas)
-
-| Tela | O que faz |
+| Fonte | Utilização na aplicação |
 |---|---|
-| Painel | Vulnerabilidade, condições ambientais, alertas (tendências significativas), estratégias e mapa |
-| Propriedade | Local por clique no mapa ou coordenadas (município/país identificados por geocodificação reversa OpenStreetMap; ao trocar de local, os dados do local anterior são descartados e o usuário é avisado do que revisar), solo, declividade, irrigação, rotação atual, culturas permitidas, prioridades; salvar/abrir (SQLite) |
-| Análise ambiental | Fontes e cobertura por local, gráficos NASA POWER, umidade do solo, ENSO, comparação 1991–2005 × 2011–2025, indicadores de vulnerabilidade, mapa com camadas GIBS (NDVI, IMERG, SMAP) |
-| Rotação inteligente | Estratégias A–D, tabela e radar comparativos, explicações em abas, fronteira de Pareto |
-| Simulador climático | ΔT, ΔP, irrigação, período-base; histórico × recente × hipotético; curvas de sensibilidade |
-| Relatório | Documento completo com fontes, resultados, riscos e limitações |
+| **NASA POWER** | Dados meteorológicos diários históricos e estimativas modeladas de umidade do solo usados nos cálculos ambientais e de rotação |
+| **NOAA ENSO/ONI** | Contexto histórico de El Niño e La Niña |
+| **NASA GIBS** | Camadas visuais de NDVI, precipitação IMERG e umidade do solo SMAP; essas imagens **não são assimiladas** pelo otimizador |
+| **OpenTopoData / SRTM** | Elevação e declividade do terreno, sujeitas à cobertura geográfica e disponibilidade do serviço |
+| **OpenStreetMap / Nominatim** | Geocodificação reversa e informações cartográficas |
+
+As consultas ao NASA POWER podem abranger **1991 até as datas disponíveis de 2026**, mas os comparativos de anos civis completos geralmente utilizam **1991–2025** (35 anos completos), desde que os critérios de disponibilidade sejam atendidos. Cerca de 34 janelas sobrepostas de dois anos representam **68 observações de modelo do tipo cultura/ano, e não 68 anos independentes ou ensaios de campo**.
+
+Detalhes: [Fontes de dados](DATA_SOURCES.md) e [Metodologia científica](METHODOLOGY.md).
 
 ## Tecnologias
 
-- **Backend:** Python, FastAPI, pandas, NumPy, SciPy (Theil-Sen, Mann-Kendall), pymoo (NSGA-II), SQLite.
-- **Núcleo científico herdado do NASA1** (`rotacao_inteligente/core`): download e cache NASA POWER, ENSO/ONI, critério de
-  estabelecimento — reutilizado diretamente pelo backend, sem cópia.
-- **Frontend:** React 19 + Vite, Tailwind CSS 4, Recharts, React Leaflet.
-- **Não usados:** GeoPandas, Rasterio, Xarray e scikit-learn foram avaliados e deixados de fora — nenhuma funcionalidade
-  atual precisa deles e aumentariam muito a instalação. Entram quando Landsat/CMIP6 forem integrados.
+- **Backend:** Python, FastAPI, pandas, NumPy, SciPy, `pymoo` (NSGA-II) e SQLite.
+- **Processamento científico:** módulos Python para coleta de dados NASA POWER, análise ENSO, indicadores climáticos, vulnerabilidade, avaliação de culturas, otimização e explicabilidade.
+- **Frontend:** React 19, Vite 7, Tailwind CSS 4, Recharts e React Leaflet.
+- **Interface analítica adicional:** Streamlit, disponível no mesmo repositório.
 
-## Arquitetura
+A aplicação atual não possui pipelines integrados de dados Landsat, ECOSTRESS ou NEX-GDDP-CMIP6. GeoPandas, Rasterio, Xarray e scikit-learn não são dependências necessárias.
 
+## Estrutura do repositório
+
+```text
+Rotacao_Inteligente/
+├── backend/
+│   ├── app/                 # API FastAPI, análises, otimização e relatórios
+│   │   └── data/            # Catálogo de culturas
+│   └── tests/               # Testes do backend
+├── frontend/
+│   └── src/                 # Interface React, componentes e testes
+├── rotacao_inteligente/
+│   ├── core/                # Módulos de processamento científico
+│   ├── data/                # Dados de referência e diretórios de cache
+│   ├── tests/               # Testes dos módulos científicos
+│   └── app.py               # Interface Streamlit adicional
+├── scripts/                 # Scripts de verificação e integração
+├── METHODOLOGY.md
+├── DATA_SOURCES.md
+├── README.pt-BR.md
+├── README.md
+├── LICENSE
+└── .gitignore
 ```
-rotacao2/
-├── rotacao_inteligente/     # NASA1 original (Streamlit) — preservado e funcional
-│   ├── core/                # NASA POWER, ENSO, janelas, resiliência... (reutilizado pelo backend)
-│   └── data/                # cache NASA POWER 1991–2026 (6 locais), oni.csv, culturas.csv
-├── backend/                 # API FastAPI (motor científico)
-│   ├── app/
-│   │   ├── legacy.py        # ponte para rotacao_inteligente/core
-│   │   ├── clima.py         # série NASA POWER, ET0, indicadores, ENSO, perturbações
-│   │   ├── vulnerabilidade.py
-│   │   ├── rotacao.py       # avaliação de rotações + NSGA-II + seleção B/C/D
-│   │   ├── explicabilidade.py
-│   │   ├── servico.py       # orquestra análise e simulador
-│   │   ├── topografia.py    # SRTM 90 m via OpenTopoData
-│   │   ├── fontes.py, relatorio.py, db.py, main.py
-│   │   └── data/catalogo_culturas.json
-│   └── tests/               # 52 testes
-├── frontend/                # React + Vite
-└── *.md                     # documentação
+
+A interface React envia as configurações da propriedade para o backend FastAPI, incluindo a rota `POST /api/analise`. O backend obtém ou reutiliza séries climáticas armazenadas em cache, calcula indicadores ambientais, avalia rotações candidatas, executa o NSGA-II, compara estratégias e devolve resultados e explicações estruturados.
+
+Com o backend em execução, a documentação interativa da API fica disponível em **http://localhost:8000/docs**.
+
+## Instalação e execução local
+
+### Pré-requisitos
+
+- **Python 3.10 ou superior**
+- **Node.js 20.19+ ou 22.12+** (Vite 7)
+- Internet para a primeira obtenção de dados climáticos e para serviços cartográficos online
+
+### 1. Instalar as dependências do backend
+
+Execute a partir da raiz do repositório.
+
+**Windows / PowerShell:**
+
+```powershell
+py -m venv .venv
+.\.venv\Scripts\Activate.ps1
+python -m pip install -r backend\requirements.txt
 ```
 
-Fluxo: o frontend envia a propriedade para `POST /api/analise`; o backend carrega a série (cache → API NASA POWER),
-calcula indicadores e vulnerabilidade, pré-computa uma tabela cultura × mês × ano, roda o NSGA-II, seleciona B/C/D,
-gera as explicações e devolve tudo em JSON. Documentação interativa da API: `http://localhost:8000/docs`.
-
-## Instalação
-
-Pré-requisitos: **Python 3.10+** (testado em 3.13) e **Node.js 20.19+ ou 22.12+** (exigência do Vite 7; testado em 22.23).
+**Linux / macOS:**
 
 ```bash
-# 1) Backend
-cd backend
-python -m venv .venv && source .venv/bin/activate      # Windows: .venv\Scripts\activate
-pip install -r requirements.txt
-
-# 2) Frontend
-cd ../frontend
-npm install
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install -r backend/requirements.txt
 ```
 
-## Execução
+### 2. Iniciar o backend
 
-Em dois terminais:
+Na raiz do repositório, com o ambiente Python ativado:
 
 ```bash
-# Terminal 1 — API em http://localhost:8000
 cd backend
-uvicorn app.main:app --port 8000          # ou ./run_backend.sh
+python -m uvicorn app.main:app --port 8000
+```
 
-# Terminal 2 — interface em http://localhost:5173
+### 3. Iniciar o frontend
+
+Abra outro terminal na raiz do repositório:
+
+```bash
 cd frontend
+npm ci
 npm run dev
 ```
 
-Abra `http://localhost:5173`. A propriedade demonstrativa (semiárido do Piauí) é analisada automaticamente
-(≈5 s). Para produção: `npm run build` e `npm run preview` (porta 4173, com proxy para a API).
+Acesse **http://localhost:5173**. A aplicação disponibiliza uma propriedade demonstrativa no semiárido do Piauí. A primeira análise pode demorar mais por depender do download das séries climáticas; consultas posteriores podem utilizar o cache local.
 
-O app Streamlit original continua disponível: `cd rotacao_inteligente && pip install -r requirements.txt && streamlit run app.py`.
-
-### Variáveis de ambiente (opcionais)
-
-| Variável | Padrão | Uso |
-|---|---|---|
-| `ROTACAO_DB_PATH` | `backend/rotacao.db` | Banco SQLite |
-| `ROTACAO_CORS_ORIGINS` | `http://localhost:5173,…` | Origens permitidas |
-| `ROTACAO_OFFLINE` | `0` | `1` desliga chamadas ao SRTM e à geocodificação |
-| `ROTACAO_GEOCODER_UA` | `RotacaoInteligente/2.0 (...)` | User-Agent enviado ao Nominatim (a política de uso pede identificação; inclua um contato) |
-| `ROTACAO_GEOCODER_URL` | Nominatim público | Outro servidor Nominatim, se houver |
-| `ROTACAO_NSGA_POP` / `_GEN` / `_SEED` | `120` / `120` / `42` | Parâmetros do NSGA-II |
-| `VITE_API_URL` | vazio (usa proxy) | URL da API para o frontend em outro host |
-
-Nenhuma chave de API é necessária: NASA POWER, OpenTopoData, GIBS e Nominatim são públicos. A geocodificação respeita o
-limite de 1 requisição/segundo do Nominatim e guarda os resultados em cache.
-
-### Testes
+Para verificar a compilação de produção, dentro de `frontend/`:
 
 ```bash
-cd backend && python -m pytest -q                 # 52 testes (clima, vulnerabilidade, rotação, NSGA-II, geocodificação, API)
-cd frontend && npm test                           # 12 testes da troca de localização (node --test)
-cd rotacao_inteligente && python -m pytest -q     # 212 testes do núcleo NASA1 (3 ignorados: exigem --run-online)
-
-# Na raiz do projeto, com o ambiente do backend:
-python scripts/smoke_global_3pontos.py            # pipeline em Nairóbi, Iowa e Punjab (informa cache × ao vivo)
-python scripts/verificacao_independente_srn.py    # recálculo independente dos números da demonstração
-python scripts/validar_integracoes.py             # COM INTERNET: NASA POWER (ponto novo), SRTM, Nominatim e GIBS reais
+npm run build
+npm run preview
 ```
 
-`validar_integracoes.py` gera `VALIDACAO_INTEGRACOES.md` com URL, status, data/hora e falhas de cada requisição.
-**Rode-o antes de publicar**: as integrações ao vivo ainda não foram validadas (ver AUDITORIA.md).
+### Interface Streamlit opcional
 
-## Internet e modo offline
+Na raiz do repositório, com o ambiente Python ativado:
 
-- 6 locais têm série NASA POWER em cache e funcionam **sem internet**: Teresina, Picos e São Raimundo Nonato (PI),
-  Nairóbi, Iowa e Punjab.
-- Qualquer outro ponto baixa a série do NASA POWER na primeira análise (8 variáveis × 36 anos, ≈1–3 min) e depois usa o cache.
-- Sem internet, um ponto novo gera mensagem clara; a declividade SRTM aparece como "não obtida" e pode ser digitada.
-- Camadas de satélite do mapa (GIBS) e mapas de fundo exigem internet no navegador.
+```bash
+python -m pip install -r rotacao_inteligente/requirements.txt
+cd rotacao_inteligente
+python -m streamlit run app.py
+```
 
-## Limitações (leia antes de interpretar)
+## Configuração
 
-- NASA POWER representa uma célula de ~50 km, não o talhão.
-- Balanço hídrico simplificado: sem armazenamento de água no solo entre meses, ET0 por Hargreaves (sem vento).
-- Índice de vulnerabilidade e Dívida Ambiental do Solo são **indicadores experimentais**; a DAS não mede fertilidade,
-  carbono ou degradação observada.
-- Parâmetros de culturas têm níveis de confiança declarados; os marcados como estimativa/análogo precisam de validação local.
-- Potencial econômico não é avaliado (faltam preços e produtividades locais confiáveis).
-- SMAP, IMERG e NDVI aparecem apenas como camadas visuais; Landsat, ECOSTRESS e NEX-GDDP-CMIP6 não estão integrados.
-- O simulador aplica perturbações **hipotéticas**; não são projeções climáticas.
+| Variável de ambiente | Finalidade |
+|---|---|
+| `ROTACAO_DB_PATH` | Caminho do banco de dados SQLite local |
+| `ROTACAO_CORS_ORIGINS` | Origens permitidas para acesso ao backend |
+| `ROTACAO_OFFLINE` | Com valor `1`, desativa determinadas consultas externas de topografia e geocodificação; **não disponibiliza dados climáticos de locais ainda não armazenados em cache** |
+| `ROTACAO_GEOCODER_UA` | User-Agent do Nominatim; configure uma identificação do projeto e contato |
+| `ROTACAO_GEOCODER_URL` | Endereço alternativo opcional para o Nominatim |
+| `ROTACAO_NSGA_POP`, `ROTACAO_NSGA_GEN`, `ROTACAO_NSGA_SEED` | População, gerações e semente do otimizador (padrões: `120`, `120`, `42`) |
+| `VITE_API_URL` | Endereço opcional da API; no desenvolvimento local, normalmente é utilizado o proxy do Vite |
 
-Detalhes: [AUDITORIA.md](AUDITORIA.md) · [METHODOLOGY.md](METHODOLOGY.md) · [DATA_SOURCES.md](DATA_SOURCES.md) · [DEMO_SCRIPT.md](DEMO_SCRIPT.md) ·
-[PROJECT_DESCRIPTION.md](PROJECT_DESCRIPTION.md)
+Os serviços públicos utilizados atualmente não exigem chaves de API específicas do projeto. Respeite os limites, as atribuições e as políticas de cada provedor. **Não publique arquivos `.env`, credenciais, bancos locais ou caches baixados.**
+
+## Testes e validação
+
+O repositório inclui testes automatizados e scripts para verificações técnicas e de integração com serviços externos. A existência desses testes **não comprova que uma execução específica passou em todas as verificações**.
+
+Instale as dependências necessárias antes de executar os comandos.
+
+**Backend (a partir da raiz):**
+
+```powershell
+cd backend
+python -m pytest -q
+cd ..
+```
+
+**Módulos científicos (instale antes `rotacao_inteligente/requirements.txt`):**
+
+```powershell
+cd rotacao_inteligente
+python -m pytest -q
+cd ..
+```
+
+**Frontend:**
+
+```powershell
+cd frontend
+npm ci
+npm test
+npm run build
+cd ..
+```
+
+**Scripts adicionais de verificação (na raiz):**
+
+```powershell
+python scripts/smoke_global_3pontos.py
+python scripts/verificacao_independente_srn.py
+python scripts/validar_integracoes.py
+```
+
+O script `validar_integracoes.py` consulta serviços externos reais: NASA POWER, OpenTopoData, Nominatim e NASA GIBS. Os resultados dependem da conexão, dos limites de uso e da disponibilidade dos serviços.
+
+## Internet, cache e funcionamento offline
+
+- Os dados históricos do NASA POWER são obtidos **sob demanda** e armazenados em cache durante a execução.
+- **Caches climáticos pré-baixados não estão incluídos no repositório público.** Uma instalação nova normalmente precisa de internet para a primeira análise, inclusive para a propriedade demonstrativa.
+- Uma localidade já analisada pode reutilizar observações disponíveis no cache local.
+- Sem dados climáticos armazenados e sem conexão com a fonte, não é possível analisar uma nova localidade.
+- Topografia, geocodificação reversa, imagens NASA GIBS e mapas de fundo podem depender de seus serviços online.
+- A configuração `ROTACAO_OFFLINE` não transforma o projeto em uma base de dados climáticos global totalmente disponível sem internet.
+
+## Limitações científicas e uso responsável
+
+- **Resolução espacial:** os dados NASA POWER são estimativas em grade, não medições feitas no talhão específico.
+- **Balanço hídrico simplificado:** os cálculos não transportam o armazenamento de água no solo entre meses; a evapotranspiração de referência utiliza Hargreaves, e não a formulação completa de Penman–Monteith.
+- **Indicadores experimentais:** o índice de vulnerabilidade e a *Dívida Ambiental do Solo* são construções para apoio à decisão, não medições diretas de fertilidade, carbono ou degradação do solo.
+- **Parâmetros agronômicos:** parte dos valores foi estimada ou adaptada de referências e requer calibração local.
+- **Produção e sementes:** não são fornecidos cálculos validados de quantidade de sementes ou previsões absolutas de colheita em kg/ha, toneladas ou sacas. As perdas potenciais relativas por estresse hídrico são **resultados de modelo, não produtividades observadas**.
+- **Retorno financeiro:** uma análise confiável de rentabilidade exige preços, custos e produtividades locais calibradas que não estão disponíveis na implementação atual.
+- **Comparação histórica:** janelas sobrepostas de dois anos não representam experimentos independentes; resultados modelados não equivalem a validação em campo.
+- **Camadas de satélite:** as sobreposições SMAP, IMERG e NDVI não são entradas numéricas do otimizador de rotação.
+- **Cenários climáticos:** as alterações definidas pelo usuário são testes hipotéticos de sensibilidade, não previsões ou projeções climáticas oficiais.
+- **Alertas:** avisos do painel descrevem riscos analíticos. A aplicação **não** emite comandos calibrados de “plante agora” nem envia notificações por WhatsApp, SMS, e-mail ou push.
+- **Indicador de evidências:** a pontuação de 0 a 100 reflete qualidade/completude das informações, **não** a probabilidade de sucesso da rotação.
+
+**Este software é um protótipo exploratório de apoio à decisão. Antes de decisões agrícolas reais, os resultados precisam ser avaliados por profissionais e confrontados com as condições locais.**
+
+## Documentação
+
+- [Metodologia científica](METHODOLOGY.md)
+- [Fontes de dados e atribuição](DATA_SOURCES.md)
+- [README in English](README.md)
+- [Licença MIT](LICENSE)
+
+## Contexto do projeto
+
+Protótipo desenvolvido para o **NASA Space Apps Challenge 2026**. As referências a dados e imagens da NASA indicam as fontes utilizadas e não representam endosso, certificação ou validação de campo por parte da agência.
