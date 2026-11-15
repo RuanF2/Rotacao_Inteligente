@@ -1,0 +1,74 @@
+
+name: Testes - Rotacao Inteligente 2.0
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  python-tests:
+    name: Backend e nucleo cientifico
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+          cache-dependency-path: |
+            backend/requirements.txt
+            rotacao_inteligente/requirements.txt
+
+      - name: Instalar dependencias
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r backend/requirements.txt
+          python -m pip install -r rotacao_inteligente/requirements.txt
+
+      - name: Preparar dados climaticos de teste
+        run: python scripts/baixar_caches_piaui.py
+
+      - name: Testar backend
+        working-directory: backend
+        run: python -m pytest -q
+
+      - name: Testar nucleo cientifico
+        working-directory: rotacao_inteligente
+        run: python -m pytest -q
+
+  frontend-tests:
+    name: Frontend e build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    defaults:
+      run:
+        working-directory: frontend
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Instalar dependencias
+        run: npm ci
+
+      - name: Testar frontend
+        run: npm test
+
+      - name: Compilar para producao
+        run: npm run build
