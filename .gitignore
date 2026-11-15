@@ -1,0 +1,50 @@
+# Python
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Frontend
+node_modules/
+frontend/dist/
+frontend/.vite/
+dist/
+build/
+
+# Credentials, private keys and local environment
+.env
+.env.*
+!.env.example
+!.env.sample
+*.pem
+*.key
+*.p12
+*.pfx
+id_rsa
+id_ed25519
+credentials.json
+secrets.json
+
+# Local data and per-user generated reports
+*.db
+*.sqlite
+*.sqlite3
+*.db-*
+rotacao_inteligente/data/cache/**
+!rotacao_inteligente/data/cache/.gitkeep
+!rotacao_inteligente/data/cache/grade_piaui/
+!rotacao_inteligente/data/cache/grade_piaui/.gitkeep
+VALIDACAO_INTEGRACOES.md
+validacao_integracoes.json
+
+# Logs, temp and editor files
+*.log
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

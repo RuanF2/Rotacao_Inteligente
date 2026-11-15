@@ -1,0 +1,14 @@
+{
+  "atual": {
+    "descricao": "Rotação atual do agricultor (padrão: milho + pousio).",
+    "sequencia": []
+  },
+  "solo": {
+    "descricao": "Rotação focada em saúde do solo (leguminosa/adubação verde no pousio).",
+    "sequencia": []
+  },
+  "agua": {
+    "descricao": "Rotação focada em economia de água (culturas de menor demanda hídrica).",
+    "sequencia": []
+  }
+}

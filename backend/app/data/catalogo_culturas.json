@@ -1,0 +1,494 @@
+{
+ "_sobre": {
+  "descricao": "Catálogo estruturado de culturas do Rotação Inteligente 2.0. Cada atributo traz a fonte e o nível de confiança. Valores marcados como 'estimativa_equipe' são parâmetros de demonstração que precisam ser validados com agrônomo local antes de qualquer uso operacional.",
+  "niveis_confianca": {
+   "literatura": "valor tabelado em fonte técnica reconhecida (FAO-56, FAO-33, Embrapa)",
+   "literatura_aproximada": "faixa citada em literatura; usamos um valor representativo da faixa",
+   "analogo": "cultura ausente da tabela de referência; usamos o valor de uma cultura análoga (indicada)",
+   "estimativa_equipe": "classificação qualitativa da equipe com base no hábito de crescimento; validar com agrônomo"
+  },
+  "referencias": {
+   "FAO56": "Allen, R.G. et al. (1998). Crop evapotranspiration — FAO Irrigation and Drainage Paper 56. Tabela 12 (Kc) e Tabela 11 (estádios).",
+   "FAO33": "Doorenbos, J. & Kassam, A.H. (1979). Yield response to water — FAO Irrigation and Drainage Paper 33 (fator Ky).",
+   "NASA1_CSV": "data/culturas.csv do projeto NASA1 (fontes Embrapa citadas no próprio CSV).",
+   "HATFIELD2015": "Hatfield, J.L. & Prueger, J.H. (2015). Temperature extremes: effect on plant growth and development. Weather and Climate Extremes 10:4-10.",
+   "EMBRAPA_COBERTURA": "Embrapa — publicações sobre plantas de cobertura e adubação verde (crotalária, feijão-de-porco, guandu, milheto)."
+  },
+  "estadios_kc": "Curva de Kc construída com frações genéricas de estádio (inicial 20%, desenvolvimento 30%, intermediário 30%, final 20%) — simplificação da Tabela 11 da FAO-56.",
+  "termico": "Frio: um dia conta como estresse se T2M < tbase_c ou se Tmin ≤ 0 °C para culturas sem tolerância a geada."
+ },
+ "culturas": [
+  {
+   "id": "milho",
+   "nome": "Milho",
+   "nome_en": "Maize (grain)",
+   "familia": "Poaceae",
+   "tipo": "comercial",
+   "ciclo_dias": 120,
+   "kc": {
+    "ini": 0.3,
+    "mid": 1.2,
+    "end": 0.35
+   },
+   "ky": 1.25,
+   "tmax_critica_c": 35,
+   "fixa_nitrogenio": false,
+   "protecao_solo": 2,
+   "agua_ref_mm_ciclo": 600,
+   "fontes": {
+    "ciclo_dias": "NASA1_CSV",
+    "kc": "FAO56",
+    "ky": "FAO33",
+    "tmax_critica_c": "HATFIELD2015",
+    "protecao_solo": "estimativa",
+    "agua_ref_mm_ciclo": "NASA1_CSV",
+    "tbase_c": "temperatura-base usual em modelos de graus-dia (literatura agronômica geral)"
+   },
+   "confianca": {
+    "ciclo_dias": "literatura",
+    "kc": "literatura",
+    "ky": "literatura",
+    "tmax_critica_c": "literatura_aproximada",
+    "protecao_solo": "estimativa_equipe",
+    "tbase_c": "literatura_aproximada"
+   },
+   "tbase_c": 10,
+   "tolera_geada": false
+  },
+  {
+   "id": "sorgo",
+   "nome": "Sorgo granífero",
+   "nome_en": "Sorghum (grain)",
+   "familia": "Poaceae",
+   "tipo": "comercial",
+   "ciclo_dias": 100,
+   "kc": {
+    "ini": 0.3,
+    "mid": 1.05,
+    "end": 0.55
+   },
+   "ky": 0.9,
+   "tmax_critica_c": 38,
+   "fixa_nitrogenio": false,
+   "protecao_solo": 2,
+   "agua_ref_mm_ciclo": 490,
+   "fontes": {
+    "ciclo_dias": "NASA1_CSV",
+    "kc": "FAO56",
+    "ky": "FAO33",
+    "tmax_critica_c": "literatura geral sobre tolerância térmica do sorgo",
+    "protecao_solo": "estimativa",
+    "agua_ref_mm_ciclo": "NASA1_CSV",
+    "tbase_c": "temperatura-base usual em modelos de graus-dia (literatura agronômica geral)"
+   },
+   "confianca": {
+    "ciclo_dias": "literatura",
+    "kc": "literatura",
+    "ky": "literatura",
+    "tmax_critica_c": "literatura_aproximada",
+    "protecao_solo": "estimativa_equipe",
+    "tbase_c": "literatura_aproximada"
+   },
+   "tbase_c": 10,
+   "tolera_geada": false
+  },
+  {
+   "id": "milheto",
+   "nome": "Milheto",
+   "nome_en": "Pearl millet",
+   "familia": "Poaceae",
+   "tipo": "comercial",
+   "ciclo_dias": 90,
+   "kc": {
+    "ini": 0.3,
+    "mid": 1.0,
+    "end": 0.3
+   },
+   "ky": null,
+   "tmax_critica_c": 40,
+   "fixa_nitrogenio": false,
+   "protecao_solo": 3,
+   "agua_ref_mm_ciclo": null,
+   "fontes": {
+    "ciclo_dias": "faixa típica 75-100 dias (grão)",
+    "kc": "FAO56",
+    "ky": "não tabelado na FAO-33",
+    "tmax_critica_c": "literatura geral (cultura tolerante ao calor)",
+    "protecao_solo": "EMBRAPA_COBERTURA",
+    "tbase_c": "temperatura-base usual em modelos de graus-dia (literatura agronômica geral)"
+   },
+   "confianca": {
+    "ciclo_dias": "literatura_aproximada",
+    "kc": "literatura",
+    "ky": "ausente",
+    "tmax_critica_c": "literatura_aproximada",
+    "protecao_solo": "literatura_aproximada",
+    "tbase_c": "literatura_aproximada"
+   },
+   "tbase_c": 10,
+   "tolera_geada": false
+  },
+  {
+   "id": "feijao-caupi",
+   "nome": "Feijão-caupi",
+   "nome_en": "Cowpea",
+   "familia": "Fabaceae",
+   "tipo": "comercial",
+   "ciclo_dias": 70,
+   "kc": {
+    "ini": 0.4,
+    "mid": 1.05,
+    "end": 0.35
+   },
+   "ky": null,
+   "tmax_critica_c": 35,
+   "fixa_nitrogenio": true,
+   "protecao_solo": 2,
+   "agua_ref_mm_ciclo": 325,
+   "fontes": {
+    "ciclo_dias": "NASA1_CSV",
+    "kc": "FAO56 (green gram and cowpeas)",
+    "ky": "não tabelado na FAO-33",
+    "tmax_critica_c": "literatura geral",
+    "fixa_nitrogenio": "NASA1_CSV",
+    "protecao_solo": "estimativa",
+    "agua_ref_mm_ciclo": "NASA1_CSV",
+    "tbase_c": "temperatura-base usual em modelos de graus-dia (literatura agronômica geral)"
+   },
+   "confianca": {
+    "ciclo_dias": "literatura",
+    "kc": "literatura",
+    "ky": "ausente",
+    "tmax_critica_c": "literatura_aproximada",
+    "protecao_solo": "estimativa_equipe",
+    "tbase_c": "literatura_aproximada"
+   },
+   "tbase_c": 10,
+   "tolera_geada": false
+  },
+  {
+   "id": "feijao-comum",
+   "nome": "Feijão-comum",
+   "nome_en": "Common bean (dry)",
+   "familia": "Fabaceae",
+   "tipo": "comercial",
+   "ciclo_dias": 90,
+   "kc": {
+    "ini": 0.4,
+    "mid": 1.15,
+    "end": 0.35
+   },
+   "ky": 1.15,
+   "tmax_critica_c": 30,
+   "fixa_nitrogenio": true,
+   "protecao_solo": 1,
+   "agua_ref_mm_ciclo": null,
+   "fontes": {
+    "ciclo_dias": "faixa típica 80-100 dias",
+    "kc": "FAO56 (beans, dry)",
+    "ky": "FAO33",
+    "tmax_critica_c": "literatura geral (sensível ao calor no florescimento)",
+    "protecao_solo": "estimativa",
+    "tbase_c": "temperatura-base usual em modelos de graus-dia (literatura agronômica geral)"
+   },
+   "confianca": {
+    "ciclo_dias": "literatura_aproximada",
+    "kc": "literatura",
+    "ky": "literatura",
+    "tmax_critica_c": "literatura_aproximada",
+    "protecao_solo": "estimativa_equipe",
+    "tbase_c": "literatura_aproximada"
+   },
+   "tbase_c": 10,
+   "tolera_geada": false
+  },
+  {
+   "id": "soja",
+   "nome": "Soja",
+   "nome_en": "Soybean",
+   "familia": "Fabaceae",
+   "tipo": "comercial",
+   "ciclo_dias": 115,
+   "kc": {
+    "ini": 0.4,
+    "mid": 1.15,
+    "end": 0.5
+   },
+   "ky": 0.85,
+   "tmax_critica_c": 35,
+   "fixa_nitrogenio": true,
+   "protecao_solo": 2,
+   "agua_ref_mm_ciclo": null,
+   "fontes": {
+    "ciclo_dias": "faixa típica 100-130 dias",
+    "kc": "FAO56",
+    "ky": "FAO33",
+    "tmax_critica_c": "HATFIELD2015",
+    "protecao_solo": "estimativa",
+    "tbase_c": "temperatura-base usual em modelos de graus-dia (literatura agronômica geral)"
+   },
+   "confianca": {
+    "ciclo_dias": "literatura_aproximada",
+    "kc": "literatura",
+    "ky": "literatura",
+    "tmax_critica_c": "literatura_aproximada",
+    "protecao_solo": "estimativa_equipe",
+    "tbase_c": "literatura_aproximada"
+   },
+   "tbase_c": 10,
+   "tolera_geada": false
+  },
+  {
+   "id": "amendoim",
+   "nome": "Amendoim",
+   "nome_en": "Groundnut",
+   "familia": "Fabaceae",
+   "tipo": "comercial",
+   "ciclo_dias": 110,
+   "kc": {
+    "ini": 0.4,
+    "mid": 1.15,
+    "end": 0.6
+   },
+   "ky": 0.7,
+   "tmax_critica_c": 35,
+   "fixa_nitrogenio": true,
+   "protecao_solo": 2,
+   "agua_ref_mm_ciclo": null,
+   "fontes": {
+    "ciclo_dias": "faixa típica 90-130 dias",
+    "kc": "FAO56",
+    "ky": "FAO33",
+    "tmax_critica_c": "literatura geral",
+    "protecao_solo": "estimativa",
+    "tbase_c": "temperatura-base usual em modelos de graus-dia (literatura agronômica geral)"
+   },
+   "confianca": {
+    "ciclo_dias": "literatura_aproximada",
+    "kc": "literatura",
+    "ky": "literatura",
+    "tmax_critica_c": "literatura_aproximada",
+    "protecao_solo": "estimativa_equipe",
+    "tbase_c": "literatura_aproximada"
+   },
+   "tbase_c": 10,
+   "tolera_geada": false
+  },
+  {
+   "id": "gergelim",
+   "nome": "Gergelim",
+   "nome_en": "Sesame",
+   "familia": "Pedaliaceae",
+   "tipo": "comercial",
+   "ciclo_dias": 100,
+   "kc": {
+    "ini": 0.35,
+    "mid": 1.1,
+    "end": 0.25
+   },
+   "ky": null,
+   "tmax_critica_c": 40,
+   "fixa_nitrogenio": false,
+   "protecao_solo": 1,
+   "agua_ref_mm_ciclo": null,
+   "fontes": {
+    "ciclo_dias": "FAO56 Tabela 11 (~100 dias)",
+    "kc": "FAO56",
+    "ky": "não tabelado na FAO-33",
+    "tmax_critica_c": "literatura geral (cultura tolerante ao calor)",
+    "protecao_solo": "estimativa",
+    "tbase_c": "temperatura-base usual em modelos de graus-dia (literatura agronômica geral)"
+   },
+   "confianca": {
+    "ciclo_dias": "literatura_aproximada",
+    "kc": "literatura",
+    "ky": "ausente",
+    "tmax_critica_c": "literatura_aproximada",
+    "protecao_solo": "estimativa_equipe",
+    "tbase_c": "literatura_aproximada"
+   },
+   "tbase_c": 10,
+   "tolera_geada": false
+  },
+  {
+   "id": "girassol",
+   "nome": "Girassol",
+   "nome_en": "Sunflower",
+   "familia": "Asteraceae",
+   "tipo": "comercial",
+   "ciclo_dias": 110,
+   "kc": {
+    "ini": 0.35,
+    "mid": 1.1,
+    "end": 0.35
+   },
+   "ky": 0.95,
+   "tmax_critica_c": 35,
+   "fixa_nitrogenio": false,
+   "protecao_solo": 1,
+   "agua_ref_mm_ciclo": null,
+   "fontes": {
+    "ciclo_dias": "faixa típica 100-130 dias",
+    "kc": "FAO56",
+    "ky": "FAO33",
+    "tmax_critica_c": "literatura geral",
+    "protecao_solo": "estimativa",
+    "tbase_c": "temperatura-base usual em modelos de graus-dia (literatura agronômica geral)"
+   },
+   "confianca": {
+    "ciclo_dias": "literatura_aproximada",
+    "kc": "literatura",
+    "ky": "literatura",
+    "tmax_critica_c": "literatura_aproximada",
+    "protecao_solo": "estimativa_equipe",
+    "tbase_c": "literatura_aproximada"
+   },
+   "tbase_c": 7,
+   "tolera_geada": false
+  },
+  {
+   "id": "trigo",
+   "nome": "Trigo",
+   "nome_en": "Wheat (spring)",
+   "familia": "Poaceae",
+   "tipo": "comercial",
+   "ciclo_dias": 120,
+   "kc": {
+    "ini": 0.3,
+    "mid": 1.15,
+    "end": 0.3
+   },
+   "ky": 1.05,
+   "tmax_critica_c": 32,
+   "fixa_nitrogenio": false,
+   "protecao_solo": 2,
+   "agua_ref_mm_ciclo": null,
+   "fontes": {
+    "ciclo_dias": "FAO56 Tabela 11 (~120 dias)",
+    "kc": "FAO56",
+    "ky": "FAO33",
+    "tmax_critica_c": "HATFIELD2015",
+    "protecao_solo": "estimativa",
+    "tbase_c": "temperatura-base usual em modelos de graus-dia (literatura agronômica geral)"
+   },
+   "confianca": {
+    "ciclo_dias": "literatura_aproximada",
+    "kc": "literatura",
+    "ky": "literatura",
+    "tmax_critica_c": "literatura_aproximada",
+    "protecao_solo": "estimativa_equipe",
+    "tbase_c": "literatura_aproximada"
+   },
+   "tbase_c": 0,
+   "tolera_geada": true
+  },
+  {
+   "id": "crotalaria-juncea",
+   "nome": "Crotalária juncea",
+   "nome_en": "Sunn hemp",
+   "familia": "Fabaceae",
+   "tipo": "cobertura",
+   "ciclo_dias": 120,
+   "kc": {
+    "ini": 0.4,
+    "mid": 1.05,
+    "end": 0.35
+   },
+   "ky": null,
+   "tmax_critica_c": 38,
+   "fixa_nitrogenio": true,
+   "protecao_solo": 3,
+   "agua_ref_mm_ciclo": null,
+   "fontes": {
+    "ciclo_dias": "NASA1_CSV (dias até o corte)",
+    "kc": "análogo: feijão-caupi (FAO56)",
+    "tmax_critica_c": "estimativa",
+    "fixa_nitrogenio": "NASA1_CSV",
+    "protecao_solo": "EMBRAPA_COBERTURA",
+    "tbase_c": "temperatura-base usual em modelos de graus-dia (literatura agronômica geral)"
+   },
+   "confianca": {
+    "ciclo_dias": "literatura",
+    "kc": "analogo",
+    "ky": "ausente",
+    "tmax_critica_c": "estimativa_equipe",
+    "protecao_solo": "literatura_aproximada",
+    "tbase_c": "estimativa_equipe"
+   },
+   "tbase_c": 10,
+   "tolera_geada": false
+  },
+  {
+   "id": "feijao-de-porco",
+   "nome": "Feijão-de-porco",
+   "nome_en": "Jack bean",
+   "familia": "Fabaceae",
+   "tipo": "cobertura",
+   "ciclo_dias": 90,
+   "kc": {
+    "ini": 0.4,
+    "mid": 1.05,
+    "end": 0.35
+   },
+   "ky": null,
+   "tmax_critica_c": 38,
+   "fixa_nitrogenio": true,
+   "protecao_solo": 3,
+   "agua_ref_mm_ciclo": null,
+   "fontes": {
+    "ciclo_dias": "NASA1_CSV (dias até o corte)",
+    "kc": "análogo: feijão-caupi (FAO56)",
+    "tmax_critica_c": "estimativa",
+    "fixa_nitrogenio": "NASA1_CSV",
+    "protecao_solo": "EMBRAPA_COBERTURA",
+    "tbase_c": "temperatura-base usual em modelos de graus-dia (literatura agronômica geral)"
+   },
+   "confianca": {
+    "ciclo_dias": "literatura_aproximada",
+    "kc": "analogo",
+    "ky": "ausente",
+    "tmax_critica_c": "estimativa_equipe",
+    "protecao_solo": "literatura_aproximada",
+    "tbase_c": "estimativa_equipe"
+   },
+   "tbase_c": 10,
+   "tolera_geada": false
+  },
+  {
+   "id": "guandu",
+   "nome": "Guandu",
+   "nome_en": "Pigeon pea",
+   "familia": "Fabaceae",
+   "tipo": "cobertura",
+   "ciclo_dias": 90,
+   "kc": {
+    "ini": 0.4,
+    "mid": 1.05,
+    "end": 0.35
+   },
+   "ky": null,
+   "tmax_critica_c": 38,
+   "fixa_nitrogenio": true,
+   "protecao_solo": 3,
+   "agua_ref_mm_ciclo": null,
+   "fontes": {
+    "ciclo_dias": "NASA1_CSV (dias até o corte; faixa 80-180)",
+    "kc": "análogo: feijão-caupi (FAO56)",
+    "tmax_critica_c": "estimativa",
+    "fixa_nitrogenio": "NASA1_CSV",
+    "protecao_solo": "EMBRAPA_COBERTURA",
+    "tbase_c": "temperatura-base usual em modelos de graus-dia (literatura agronômica geral)"
+   },
+   "confianca": {
+    "ciclo_dias": "literatura_aproximada",
+    "kc": "analogo",
+    "ky": "ausente",
+    "tmax_critica_c": "estimativa_equipe",
+    "protecao_solo": "literatura_aproximada",
+    "tbase_c": "estimativa_equipe"
+   },
+   "tbase_c": 10,
+   "tolera_geada": false
+  }
+ ]
+}

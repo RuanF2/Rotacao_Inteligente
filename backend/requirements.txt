@@ -1,0 +1,13 @@
+# Rotação Inteligente 2.0 — backend (Python 3.10+; testado em 3.13)
+# Instalar:  pip install -r requirements.txt
+fastapi>=0.110
+uvicorn[standard]>=0.29
+pydantic>=2.5
+pandas>=2.2
+numpy>=1.26
+scipy>=1.11
+pymoo>=0.6.1
+requests>=2.31
+# testes
+pytest>=8.0
+httpx>=0.27

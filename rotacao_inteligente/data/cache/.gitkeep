@@ -1,0 +1,2 @@
+# Esta pasta guarda respostas da API NASA POWER em JSON.
+# A demo offline lê daqui; se o arquivo não existir, o código baixa e salva.

@@ -1,0 +1,85 @@
+{
+ "A": {
+  "pares": {
+   "n_observacoes": 68,
+   "freq_quebra": 0.45588235294117646,
+   "perda_media": 0.4683803546249856,
+   "deficit_mm_ano": 189.62992775315976,
+   "por_slot": {
+    "milho (ano 1)": {
+     "anos_usados": "1991–2024",
+     "perda_media": 0.4629132196120206,
+     "etc_medio": 488.067975193189,
+     "pe_media": 301.80724838588236
+    },
+    "milho (ano 2)": {
+     "anos_usados": "1992–2025",
+     "perda_media": 0.473847489637951,
+     "etc_medio": 490.8098988924766,
+     "pe_media": 299.1168080282353
+    }
+   }
+  },
+  "anos_unicos": {
+   "alinhamento 1 (ano 1 da rotação em 1991, 1993, …)": {
+    "n_anos_unicos": 35,
+    "anos_com_quebra": 16,
+    "freq_quebra": 0.45714285714285713
+   },
+   "alinhamento 2 (ano 1 da rotação em 1992, 1994, …)": {
+    "n_anos_unicos": 35,
+    "anos_com_quebra": 16,
+    "freq_quebra": 0.45714285714285713
+   },
+   "milho em todos os anos 1991–2025": {
+    "n_anos_unicos": 35,
+    "anos_com_quebra": 16,
+    "freq_quebra": 0.45714285714285713
+   }
+  }
+ },
+ "C": {
+  "pares": {
+   "n_observacoes": 68,
+   "freq_quebra": 0.1323529411764706,
+   "perda_media": 0.25036073579916757,
+   "deficit_mm_ano": 97.41591904572846,
+   "por_slot": {
+    "sorgo (ano 1)": {
+     "anos_usados": "1991–2024",
+     "perda_media": 0.2487426085988299,
+     "etc_medio": 379.11439714205295,
+     "pe_media": 274.1888901976471
+    },
+    "milheto (ano 2)": {
+     "anos_usados": "1992–2025",
+     "perda_media": 0.25197886299950534,
+     "etc_medio": 321.1439127592929,
+     "pe_media": 244.29774008080204
+    }
+   }
+  },
+  "anos_unicos": {
+   "alinhamento 1 (ano 1 da rotação em 1991, 1993, …)": {
+    "n_anos_unicos": 35,
+    "anos_com_quebra": 6,
+    "freq_quebra": 0.17142857142857143
+   },
+   "alinhamento 2 (ano 1 da rotação em 1992, 1994, …)": {
+    "n_anos_unicos": 35,
+    "anos_com_quebra": 4,
+    "freq_quebra": 0.11428571428571428
+   },
+   "sorgo em todos os anos 1991–2025": {
+    "n_anos_unicos": 35,
+    "anos_com_quebra": 5,
+    "freq_quebra": 0.14285714285714285
+   },
+   "milheto em todos os anos 1991–2025": {
+    "n_anos_unicos": 35,
+    "anos_com_quebra": 5,
+    "freq_quebra": 0.14285714285714285
+   }
+  }
+ }
+}

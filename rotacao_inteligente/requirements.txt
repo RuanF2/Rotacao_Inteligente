@@ -1,0 +1,15 @@
+# Rotação Inteligente (app Streamlit legado do NASA1) — Python 3.10+
+# Instalar com:  pip install -r requirements.txt
+#
+# Revisão 2.0 (2026-11-14): pinos exatos trocados por limites mínimos.
+# Os pinos antigos (ex.: pandas==2.3.3) falhavam em Pythons mais novos e
+# deixavam a instalação incompleta — origem do erro
+# "ModuleNotFoundError: No module named 'folium'". Testado com pandas 3.0,
+# streamlit 1.67, folium 0.20, plotly 7.1 (212 testes passando).
+streamlit>=1.40
+pandas>=2.2
+plotly>=5.20
+requests>=2.31
+folium>=0.17
+streamlit-folium>=0.22
+pytest>=8.0

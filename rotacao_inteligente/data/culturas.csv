@@ -1,0 +1,7 @@
+nome,tipo,ciclo_dias,agua_mm_ciclo,tmax_limite_c,fixa_nitrogenio,protecao_erosao,valor_mercado,taxa_semeadura_kg_ha,rendimento_potencial_kg_ha,rendimento_regional_kg_ha,fonte
+feijao-caupi,comercial,70,325,,sim,,,18,2000,,"Embrapa Meio-Norte (irrigação do caupi); Embrapa (cultivar BRS Paraguaçu); Embrapa (BRS Itaim, densidade e produtividade)"
+milho,comercial,120,600,,nao,,,,5000,,"Embrapa Milho e Sorgo (Cultivo do Milho); Embrapa Meio-Norte (milho)"
+sorgo,comercial,100,490,,nao,,,,,,"Embrapa Milho e Sorgo (consumo de água 380-600 mm; ciclo ~100 dias)"
+crotalaria-juncea,cobertura,120,,,sim,,,25,,,"Embrapa Agrobiologia e Embrapa Oeste (ciclo até o corte); Embrapa CT181 e CT108 (semente)"
+feijao-de-porco,cobertura,90,,,sim,,,100,,,"Cadernos de Agroecologia ABA (ciclo, fonte não oficial); Embrapa CT108 (semente)"
+guandu,cobertura,90,,,sim,,,30,,,"Embrapa Caprinos e Ovinos (ciclo, faixa 80-180 dias); Agrolink (semente, não oficial)"
