@@ -85,11 +85,13 @@ RotacaoInteligente2/
 │   ├── core/                      # Original NASA1 modules (mostly Streamlit-only)
 │   ├── data/                      # Reference datasets; runtime caches excluded
 │   └── app.py                     # Preserved Streamlit interface
-├── scripts/                       # Validation and reproducibility tools
+├── scripts/
 ├── METHODOLOGY.md
 ├── DATA_SOURCES.md
-├── AUDITORIA.md
-└── README.md
+├── README.pt-BR.md
+├── README.md
+├── LICENSE
+└── .gitignore
 ```
 
 **Analysis flow:** the React frontend submits property settings to `POST /api/analise`. The FastAPI backend obtains the corresponding NASA POWER time series (from a local cache if available, otherwise from the public API), derives climate indicators and vulnerability, evaluates crop/month/year combinations, runs NSGA-II, selects strategies B/C/D, and returns comparisons and explanations as JSON.
@@ -240,12 +242,9 @@ The system should be treated as a **transparent, exploratory decision-support pr
 ## Supporting documentation
 
 - [Scientific methodology](METHODOLOGY.md)
-- [Full technical documentation (Portuguese)](DOCUMENTACAO_COMPLETA_ROTACAO_INTELIGENTE.md)
 - [Data sources and attribution](DATA_SOURCES.md)
-- [Audit and validation notes](AUDITORIA.md)
-- [Demonstration script](DEMO_SCRIPT.md)
-- [Project submission description](PROJECT_DESCRIPTION.md)
-- [Rotation infeasibility diagnostics](DIAGNOSTICO_INVIABILIDADE.md)
+- [Portuguese README](README.pt-BR.md)
+- [MIT License](LICENSE)
 
 ## Project context
 
