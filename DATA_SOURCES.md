@@ -40,5 +40,4 @@ Mapas de fundo: OpenStreetMap e Esri World Imagery.
 - **ONI:** a NOAA revisa valores recentes; o monitoramento operacional usa o RONI.
 - **SRTM:** representa a superfície em 2000, inclui vegetação/edificações; declividade em 90 m suaviza o relevo.
 - **GIBS:** imagens para visualização, sem valores numéricos extraídos; datas podem não ter cobertura (nuvens, órbita, processamento).
-- **Cache incluído:** Teresina-PI, Picos-PI, São Raimundo Nonato-PI, Nairóbi, Iowa, Punjab (1991–2026). Outros pontos são
-  baixados sob demanda.
+- - **Cache climático:** os dados climáticos pré-baixados não são distribuídos neste repositório. As séries são obtidas sob demanda do NASA POWER e armazenadas localmente.
