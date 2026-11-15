@@ -19,12 +19,30 @@ For user-selected coordinates around the world, Rotação Inteligente 2.0:
 3. **Optimizes crop rotations** using the multi-objective **NSGA-II** algorithm (`pymoo`) and a catalog of 13 crops, with agronomic constraints covering planting windows, temperature suitability, overlap, monoculture, and yearly commercial-crop requirements.
 4. **Compares four strategies:** **A — Current rotation**, **B — Soil conservation**, **C — Water resilience**, and **D — User-priority balance**, assessing their performance across approximately 34 overlapping pairs of historical years rather than relying on long-term averages alone.
 5. **Simulates climate sensitivity** under hypothetical changes in temperature and precipitation.
-6. **Explains recommendations**, including their rationale, supporting evidence, sources and reference periods, potential benefits, risks, uncertainty, and missing information.
+6. **Explains recommendations**, including their rationale, supporting evidence, sources and reference periods, modeled relative water-stress losses, risks, uncertainty and missing information. The reported evidence-quality indicator is **not** a probability that a crop will succeed.
 7. **Produces reports** in Markdown and a print-friendly format that can be saved as PDF from the browser.
 
 A distinguishing feature is the **24-month crop-rotation timeline**, which displays planting sequences, botanical families, and modeled soil-cover duration in relation to local water availability.
 
 When no valid two-year rotation is found, the interface provides a **diagnostic explanation of the constraints checked**, rather than inventing an agronomically unsupported recommendation. An optimizer's failure to find a solution is not automatically proof that no solution exists.
+
+## Current implementation status: what works and what does not
+
+| Capability | Current status |
+|---|---|
+| NASA POWER climate ingestion, local caching, historical environmental analysis | **Implemented in FastAPI 2.0** (NASA1 POWER client reused) |
+| ENSO/ONI context | **Implemented in FastAPI 2.0** using the shared legacy module and auxiliary NOAA data |
+| 13-crop evaluation, 24-month rotation optimization, Pareto solutions and A–D strategies | **Implemented in FastAPI 2.0**, with a new `rotacao.py` and catalog |
+| Soil/environmental vulnerability, mapped satellite overlays, hypothetical climate sensitivity, reports | **Implemented in the 2.0 web application** |
+| Legacy `planejador`, `janelas`, `alerta`, `semaforo` | **Streamlit/NASA1 only; not exposed by the FastAPI 2.0 endpoints** |
+| Automatic “PLANTE AGORA” planting message and SMS/WhatsApp/email/push notifications | **Not implemented in the 2.0 web application**. Legacy planting alerts are *simulated* and require agronomically calibrated thresholds; no delivery integration exists. |
+| Seed quantity in kg for a specified field area | **Not implemented as a validated 2.0 calculation**; the 13-crop catalog has no sowing-rate dataset. The six-crop legacy CSV contains missing rates, including maize and sorghum. |
+| Actual harvest in kg/ha, tonnes or bags, or financial returns | **Not forecast**: regional yield fields are unpopulated and the local productivity dataset has no observations. Historical **relative potential water-stress loss** is modeled using Ky; this is not a calibrated yield forecast. |
+| Evidence “confidence” indicator | **Implemented as a 0–100 evidence-quality/completeness score**, **not** a statistical chance of success or validation of real-world outcomes. |
+
+**Historical-period interpretation:** The legacy POWER request can extend from **1991 through 2026** to support complete agricultural-year windows; annual historical comparisons in the current materials often use **1991–2025** (35 complete calendar years). Approximately 34 overlapping two-year windows yield 68 crop-year observations, but those are **not independent years or trials**. Available coverage and final complete years depend on NASA POWER availability and processing rules.
+
+**No automated grower notifications:** The web dashboard displays analytical warnings about climate risks and model limitations. These are not calibrated “plant now” commands, messages sent to growers, or external notifications.
 
 ## Application features
 
@@ -40,7 +58,7 @@ When no valid two-year rotation is found, the interface provides a **diagnostic 
 ## Technology stack
 
 - **Backend:** Python, FastAPI, pandas, NumPy, SciPy, `pymoo` (NSGA-II), SQLite.
-- **Scientific core:** the preserved NASA1/Streamlit project under `rotacao_inteligente/`, reused by the API for NASA POWER ingestion, ENSO analysis, crop establishment, and related calculations.
+- **Scientific core:** the preserved NASA1/Streamlit application under `rotacao_inteligente/`. The FastAPI 2.0 service reuses **only** `core.nasa_power`, `core.enso` and selected constants in legacy `config.py`; its rotation optimizer, crop catalog, vulnerability index, explanations and API use separate 2.0 implementations. The original `planejador`, `janelas`, `alerta`, `semaforo` and other NASA1 workflows remain available **only in Streamlit**.
 - **Frontend:** React 19, Vite, Tailwind CSS 4, Recharts, React Leaflet.
 - **External data/services:** NASA POWER, NASA GIBS, OpenTopoData (SRTM-derived elevation/slope), and OpenStreetMap Nominatim.
 
@@ -52,7 +70,7 @@ GeoPandas, Rasterio, Xarray, and scikit-learn are **not** current dependencies. 
 RotacaoInteligente2/
 ├── backend/
 │   ├── app/
-│   │   ├── legacy.py                # Shared scientific-core adapter
+│   │   ├── legacy.py                # Partial NASA1 adapter: POWER, ENSO, config
 │   │   ├── clima.py                 # Climate series, ET₀, ENSO, scenarios
 │   │   ├── vulnerabilidade.py       # Experimental vulnerability index
 │   │   ├── rotacao.py               # Rotation evaluation and NSGA-II
@@ -64,7 +82,7 @@ RotacaoInteligente2/
 ├── frontend/
 │   └── src/                       # React interface and tests
 ├── rotacao_inteligente/
-│   ├── core/                      # Original NASA1 scientific modules
+│   ├── core/                      # Original NASA1 modules (mostly Streamlit-only)
 │   ├── data/                      # Reference datasets; runtime caches excluded
 │   └── app.py                     # Preserved Streamlit interface
 ├── scripts/                       # Validation and reproducibility tools
@@ -93,19 +111,19 @@ From the repository root:
 **Windows (PowerShell):**
 
 ```powershell
-cd backend
+# From the repository root
 py -m venv .venv
 .\.venv\Scripts\Activate.ps1
-python -m pip install -r requirements.txt
+python -m pip install -r backend\requirements.txt
 ```
 
 **Linux/macOS:**
 
 ```bash
-cd backend
+# From the repository root
 python3 -m venv .venv
 source .venv/bin/activate
-python -m pip install -r requirements.txt
+python -m pip install -r backend/requirements.txt
 ```
 
 ### 2. Install the frontend
@@ -124,7 +142,7 @@ npm ci
 ```bash
 cd backend
 # Activate your Python environment if it is not already active.
-uvicorn app.main:app --port 8000
+python -m uvicorn app.main:app --port 8000
 ```
 
 **Terminal 2 — Web interface:**
@@ -209,6 +227,8 @@ The last command requires internet connectivity and tests real NASA POWER, OpenT
 - **Simplified water balance:** the current model does not carry soil-water storage from month to month, and reference evapotranspiration uses Hargreaves rather than a complete wind-aware Penman–Monteith implementation.
 - **Experimental metrics:** the vulnerability index and *Environmental Soil Debt* indicator are decision-support constructs, **not observed measurements of soil fertility, soil carbon, or degradation**.
 - **Crop parameters:** confidence levels are disclosed; estimated or analogous parameters need local calibration and agronomic validation.
+- **Yields and seed rates:** the 13-crop 2.0 catalog does not supply field-validated sowing rates or measured regional yields, so the app does **not** calculate validated seed kilograms or forecast harvest quantities. Relative modeled water-stress losses do not establish absolute production.
+- **Alerts:** the 2.0 interface does not provide calibrated planting commands or WhatsApp, SMS, email or push delivery.
 - **Economic outcomes:** local crop prices, production costs, and reliably calibrated yields are insufficient for a robust profitability forecast.
 - **Historical comparisons:** overlapping two-year historical windows are not independent experimental observations. Reported water-deficit and crop-loss indicators are **model outputs**, not measured field outcomes or validated predictions of actual harvest losses.
 - **Data layers:** SMAP, IMERG, and NDVI are presented as visual map layers; they are not independently assimilated into the crop-rotation optimizer.
@@ -220,6 +240,7 @@ The system should be treated as a **transparent, exploratory decision-support pr
 ## Supporting documentation
 
 - [Scientific methodology](METHODOLOGY.md)
+- [Full technical documentation (Portuguese)](DOCUMENTACAO_COMPLETA_ROTACAO_INTELIGENTE.md)
 - [Data sources and attribution](DATA_SOURCES.md)
 - [Audit and validation notes](AUDITORIA.md)
 - [Demonstration script](DEMO_SCRIPT.md)

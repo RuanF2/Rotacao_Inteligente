@@ -15,7 +15,7 @@ benefícios de leguminosas e plantas de cobertura são difíceis de comparar com
 
 Para qualquer coordenada do planeta, o sistema:
 
-1. **Analisa o ambiente** com 35 anos de dados diários do NASA POWER (chuva, temperaturas, umidade do solo modelada),
+1. **Analisa o ambiente** com aproximadamente 35 anos completos de dados diários do NASA POWER (chuva, temperaturas, umidade do solo modelada),
    calcula ET0, aridez, veranicos, calor extremo, erosividade, tendências e a relação com El Niño / La Niña.
 2. **Mede a vulnerabilidade** da propriedade com um índice experimental documentado (8 indicadores, faixas publicadas).
 3. **Gera estratégias de rotação** com otimização multiobjetivo **NSGA-II** (pymoo) sobre 13 culturas, respeitando
@@ -29,6 +29,23 @@ Para qualquer coordenada do planeta, o sistema:
 
 O diferencial é a **faixa de rotação de 24 meses**: uma régua de calendário em que cada mês mostra a família botânica e a
 cobertura efetiva do solo, ponderada pela água realmente disponível naquele local.
+
+## Estado atual de implementação — esclarecimentos
+
+| Funcionalidade | Situação real |
+|---|---|
+| NASA POWER, ENSO, vulnerabilidade, catálogo de 13 culturas, otimização NSGA-II, estratégias A–D, simulador e relatório | Implementados na aplicação web 2.0 |
+| Módulos antigos `planejador.py`, `janelas.py`, `alerta.py` e `semaforo.py` | Disponíveis na aplicação Streamlit NASA1; **não integrados à API FastAPI 2.0** |
+| Aviso automático de **“PLANTE AGORA”** e envio por WhatsApp, SMS, e-mail ou push | **Não implementados no 2.0**. O alerta Streamlit é um experimento e mantém limiares de chuva/umidade não calibrados (`None`). |
+| Quantidade de sementes em kg e produção prevista em kg/ha, toneladas ou sacas | **Não estimadas de modo validado**. O catálogo de 13 culturas não contém taxas de semeadura/rendimentos observados e o banco regional de produtividade não está preenchido. |
+| Perda potencial relativa de rendimento hídrico | **Estimativa de modelo** via Ky e déficit hídrico, não estimativa de produção absoluta ou resultado observado |
+| Indicador de confiança | Qualidade/completude das evidências, **não** probabilidade de sucesso agrícola |
+
+**Integração NASA1:** o arquivo `backend/app/legacy.py` importa seletivamente apenas `core.nasa_power`, `core.enso` e constantes de `config.py`. O planejador e as regras de alerta do NASA1 não são executados pelos endpoints de rotação da versão 2.0.
+
+**Período da série:** o cliente NASA POWER pode consultar 1991–2026 para fechar anos agrícolas. Comparativos que usam 1991–2025 analisam 35 anos civis completos. Uma análise de rotação pode empregar cerca de 34 pares deslizantes de dois anos — 68 observações de cultivo/ano **não independentes**.
+
+**Transparência:** alertas mostrados no painel são avisos analíticos de risco, não ordens de plantio nem notificações externas. Cenários de temperatura/chuva são hipóteses de sensibilidade, não previsões climáticas oficiais.
 
 ## Funcionalidades (todas implementadas e testadas)
 
